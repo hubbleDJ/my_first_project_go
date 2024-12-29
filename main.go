@@ -3,32 +3,38 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math/rand"
+	"greeting"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
-func getValueInPointer(myPointer *bool) bool {
-	return *myPointer
+func getFloat64(terminalText string) (float64, error) {
+	fmt.Print(terminalText)
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+
+	if err != nil {
+		return 0.0, err
+	}
+
+	input = strings.TrimSpace(input)
+	returnFloat, err := strconv.ParseFloat(input, 64)
+	if err != nil {
+		return 0.0, err
+	}
+
+	return returnFloat, nil
 }
 
 func main() {
-	// Ввод числа от пользователя
-	fmt.Print("Введи число: ")
-	reader := bufio.NewReader(os.Stdin)
-	input, _ := reader.ReadString('\n')
-	inputValueForm := strings.TrimSpace(input)
-	inputInt, _ := strconv.Atoi(inputValueForm)
-	fmt.Println(inputInt)
+	myFloat, err := getFloat64("Введите число: ")
 
-	// Генерация случайного числа
-	seconds := time.Now().Unix()
-	rand.Seed(seconds)
-	randNum := rand.Intn(101)
-	fmt.Println(randNum)
+	if err != nil {
+		print(err)
+	} else {
+		fmt.Printf("Ваше число: %0.2f\n", myFloat)
+	}
 
-	myBoolVar := true
-	fmt.Println(getValueInPointer(&myBoolVar))
+	greeting.Hello()
 }
